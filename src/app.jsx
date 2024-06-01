@@ -20,7 +20,7 @@ export const App = () => {
 	};
 
 	if (fields.every((el) => el !== '') && !isDraw && !isGameEnded) {
-		setIsDraw(true);
+		store.dispatch({ type: 'SET_IS_DRAW', payload: true });
 	}
 
 	const handleClick = (id) => {
@@ -31,17 +31,18 @@ export const App = () => {
 		if (fields[id] === '' && !isGameEnded) {
 			const newFilds = [...fields];
 			newFilds[id] = currentPlayer;
-			setFields(newFilds);
+			store.dispatch({ type: 'SET_FIELDS', payload: newFilds });
 
 			if (isChecked(newFilds, currentPlayer)) {
-				setIsGameEnded(true);
+				store.dispatch({ type: 'SET_IS_GAME_END', payload: true });
+
 				return null;
 			}
 		} else {
 			return null;
 		}
 
-		setCurrentPlayer((prevState) => (prevState === 'X' ? '0' : 'X'));
+		store.dispatch({ type: 'SET_CURRENT_PLAYER' });
 	};
 
 	let isResult;
@@ -62,14 +63,15 @@ export const App = () => {
 	};
 
 	useEffect(() => {
-		store.subscribe(() => {
+		const unsubscribe = store.subscribe(() => {
 			const state = store.getState();
 			setCurrentPlayer(state.currentPlayer);
 			setIsGameEnded(state.isGameEnded);
 			setIsDraw(state.isDraw);
 			setFields(state.fields);
 		});
-	}, [setFields, setCurrentPlayer, setIsGameEnded, setIsDraw]);
+		return () => unsubscribe();
+	}, []);
 
 	return (
 		<div className={styles.App}>
