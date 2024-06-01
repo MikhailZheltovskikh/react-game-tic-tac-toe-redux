@@ -1,1 +1,1 @@
-export { WIN_PATTERNS } from './WIN_PATTERNS';
+export * from './WIN_PATTERNS';
