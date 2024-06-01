@@ -1,27 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './app.module.css';
 import { FieldComponent } from './components/field/fieldContainer.js';
 import { InfoComponent } from './components/info/infoContainer.js';
 import { ButtonComponent } from './components/clear/clearContainer.js';
+import { WIN_PATTERNS } from './constants';
 
-const array = ['', '', '', '', '', '', '', '', ''];
-
-const WIN_PATTERNS = [
-	[0, 1, 2],
-	[3, 4, 5],
-	[6, 7, 8],
-	[0, 3, 6],
-	[1, 4, 7],
-	[2, 5, 8],
-	[0, 4, 8],
-	[2, 4, 6],
-];
+import { store } from './store/index.js';
 
 export const App = () => {
-	const [fields, setFields] = useState(array);
-	const [currentPlayer, setCurrentPlayer] = useState('X');
-	const [isGameEnded, setIsGameEnded] = useState(false);
-	const [isDraw, setIsDraw] = useState(false);
+	const [fields, setFields] = useState(store.getState().fields);
+	const [currentPlayer, setCurrentPlayer] = useState(store.getState().currentPlayer);
+	const [isGameEnded, setIsGameEnded] = useState(store.getState().isGameEnded);
+	const [isDraw, setIsDraw] = useState(store.getState().isDraw);
 
 	const isChecked = (fields, currentPlayer) => {
 		return WIN_PATTERNS.some((el) =>
@@ -40,7 +30,6 @@ export const App = () => {
 
 		if (fields[id] === '' && !isGameEnded) {
 			const newFilds = [...fields];
-			// const newFilds = fields.slice();
 			newFilds[id] = currentPlayer;
 			setFields(newFilds);
 
@@ -69,10 +58,18 @@ export const App = () => {
 	}
 
 	const handleClear = () => {
-		setFields(array);
-		setIsGameEnded(false);
-		setIsDraw(false);
+		store.dispatch({ type: 'RESET_GAME' });
 	};
+
+	useEffect(() => {
+		store.subscribe(() => {
+			const state = store.getState();
+			setCurrentPlayer(state.currentPlayer);
+			setIsGameEnded(state.isGameEnded);
+			setIsDraw(state.isDraw);
+			setFields(state.fields);
+		});
+	}, [setFields, setCurrentPlayer, setIsGameEnded, setIsDraw]);
 
 	return (
 		<div className={styles.App}>
