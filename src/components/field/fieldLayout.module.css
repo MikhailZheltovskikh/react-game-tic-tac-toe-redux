@@ -1,0 +1,23 @@
+.container {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.col {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 40px;
+	line-height: 1;
+	font-weight: 700;
+	color: #000;
+	text-transform: uppercase;
+	width: 100px;
+	height: 100px;
+	box-shadow:
+		inset -1px 0 0 0 #a8a8a8,
+		inset 0 -1px 0 0 #a8a8a8,
+		-1px -1px 0 0 #a8a8a8,
+		-1px 0 0 0 #a8a8a8,
+		0 -1px 0 0 #a8a8a8 !important;
+}

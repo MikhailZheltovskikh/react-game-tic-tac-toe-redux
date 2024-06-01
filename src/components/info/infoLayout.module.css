@@ -1,0 +1,11 @@
+.info {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.info span {
+	font-size: 18px;
+	line-height: 1.2;
+	font-weight: 400;
+	color: green;
+}
