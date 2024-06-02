@@ -10,7 +10,7 @@ export const reducer = (state = initialState, { type, payload }) => {
 		case 'SET_CURRENT_PLAYER':
 			return {
 				...state,
-				currentPlayer: state.currentPlayer === 'X' ? '0' : 'X',
+				currentPlayer: payload,
 			};
 		case 'SET_IS_GAME_END':
 			return {

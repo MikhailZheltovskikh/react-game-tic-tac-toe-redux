@@ -42,7 +42,7 @@ export const App = () => {
 			return null;
 		}
 
-		store.dispatch({ type: 'SET_CURRENT_PLAYER' });
+		store.dispatch({ type: 'SET_CURRENT_PLAYER', payload: currentPlayer === 'X' ? '0' : 'X' });
 	};
 
 	let isResult;
