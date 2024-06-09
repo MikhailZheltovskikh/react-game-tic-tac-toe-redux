@@ -1,17 +1,16 @@
-import { useState, useEffect } from 'react';
 import styles from './app.module.css';
 import { FieldComponent } from './components/field/fieldContainer.js';
 import { InfoComponent } from './components/info/infoContainer.js';
 import { ButtonComponent } from './components/clear/clearContainer.js';
 import { WIN_PATTERNS } from './constants';
-
-import { store } from './store/index.js';
+import { useSelector, useDispatch } from 'react-redux';
 
 export const App = () => {
-	const [fields, setFields] = useState(store.getState().fields);
-	const [currentPlayer, setCurrentPlayer] = useState(store.getState().currentPlayer);
-	const [isGameEnded, setIsGameEnded] = useState(store.getState().isGameEnded);
-	const [isDraw, setIsDraw] = useState(store.getState().isDraw);
+	const dispatch = useDispatch();
+	const fields = useSelector((state) => state.fields);
+	const currentPlayer = useSelector((state) => state.currentPlayer);
+	const isGameEnded = useSelector((state) => state.isGameEnded);
+	const isDraw = useSelector((state) => state.isDraw);
 
 	const isChecked = (fields, currentPlayer) => {
 		return WIN_PATTERNS.some((el) =>
@@ -20,7 +19,7 @@ export const App = () => {
 	};
 
 	if (fields.every((el) => el !== '') && !isDraw && !isGameEnded) {
-		store.dispatch({ type: 'SET_IS_DRAW', payload: true });
+		dispatch({ type: 'SET_IS_DRAW', payload: true });
 	}
 
 	const handleClick = (id) => {
@@ -31,10 +30,10 @@ export const App = () => {
 		if (fields[id] === '' && !isGameEnded) {
 			const newFilds = [...fields];
 			newFilds[id] = currentPlayer;
-			store.dispatch({ type: 'SET_FIELDS', payload: newFilds });
+			dispatch({ type: 'SET_FIELDS', payload: newFilds });
 
 			if (isChecked(newFilds, currentPlayer)) {
-				store.dispatch({ type: 'SET_IS_GAME_END', payload: true });
+				dispatch({ type: 'SET_IS_GAME_END', payload: true });
 
 				return null;
 			}
@@ -42,7 +41,7 @@ export const App = () => {
 			return null;
 		}
 
-		store.dispatch({ type: 'SET_CURRENT_PLAYER', payload: currentPlayer === 'X' ? '0' : 'X' });
+		dispatch({ type: 'SET_CURRENT_PLAYER', payload: currentPlayer === 'X' ? '0' : 'X' });
 	};
 
 	let isResult;
@@ -59,19 +58,8 @@ export const App = () => {
 	}
 
 	const handleClear = () => {
-		store.dispatch({ type: 'RESET_GAME' });
+		dispatch({ type: 'RESET_GAME' });
 	};
-
-	useEffect(() => {
-		const unsubscribe = store.subscribe(() => {
-			const state = store.getState();
-			setCurrentPlayer(state.currentPlayer);
-			setIsGameEnded(state.isGameEnded);
-			setIsDraw(state.isDraw);
-			setFields(state.fields);
-		});
-		return () => unsubscribe();
-	}, []);
 
 	return (
 		<div className={styles.App}>

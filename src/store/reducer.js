@@ -11,7 +11,7 @@ export const reducer = (state = initialState, { type, payload }) => {
 			return {
 				...state,
 				currentPlayer: payload,
-			};
+			}; 
 		case 'SET_IS_GAME_END':
 			return {
 				...state,
